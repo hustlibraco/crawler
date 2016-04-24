@@ -70,7 +70,6 @@ class QSBK(object):
         except:
             traceback.print_exc()
             return False
-        # print self.page, self.no
 
     def loadPager(self):
         # 加载段子
