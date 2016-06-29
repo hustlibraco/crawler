@@ -30,12 +30,11 @@ class QSBK(object):
         self.urlfmt = 'http://www.qiushibaike.com/hot/page/{page}'
         self.jokefmt = u'[序号]\t{no}\n[作者]\t{author}\n[内容]\t{content}\n[好笑]\t{votes}\n[评论]\t{comments}\n'
         self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36\
-            (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36'}
-        self.jokes = gevent.queue.Queue(200)       # 存放段子
-        self.page = 1                       # 爬取的页码
-        self.no = 0                         # 爬取段子数
-        self.evt = gevent.event.Event()        # 爬取页面同步锁
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36'}
+        self.jokes = gevent.queue.Queue(200)    # 存放段子
+        self.page = 1                           # 爬取的页码
+        self.no = 0                             # 爬取段子数
+        self.evt = gevent.event.Event()         # 爬取页面同步锁
 
     def loadPage(self):
         # 加载一页糗百段子
