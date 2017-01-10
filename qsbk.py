@@ -104,7 +104,7 @@ class QSBK(object):
     
     def start(self):
         # 启动爬虫
-        print '开始爬取段子……\n'
+        print u'开始爬取段子……\n'
         t = threading.Thread(target=self.loadPager, args=())
         t.setDaemon(True)
         t.start()
