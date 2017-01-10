@@ -28,7 +28,7 @@ class QSBK(object):
     """
     def __init__(self):
         self.urlfmt = 'http://www.qiushibaike.com/hot/page/{page}'
-        self.jokefmt = u'[序号]\t{no}\n[作者]\t{author}\n[内容]\t{content}\n[好笑]\t{votes}\n[评论]\t{comments}\n'
+        self.jokefmt = u'[序号]\t{no}\n[作者]\t{author}|{sex}|{age}\n[内容]\t{content}\n[好笑]\t{votes}\n[评论]\t{comments}\n'
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36'}
         self.jokes = gevent.queue.Queue(200)    # 存放段子
@@ -41,7 +41,7 @@ class QSBK(object):
         url = self.urlfmt.format(page=self.page)
         try:
             r = requests.get(url, headers=self.headers)
-            soup = BeautifulSoup(r.text, 'html5lib')
+            soup = BeautifulSoup(r.text, 'lxml')
             jokes = soup.find_all('div',
                 class_='article block untagged mb15',
                 id=re.compile(r'qiushi_tag_(\d)+'))
@@ -52,7 +52,16 @@ class QSBK(object):
                         continue
                     self.no += 1
                     one = {}
-                    one['author'] = joke.find('div', class_='author clearfix').text.strip()
+                    author_tag = joke.find('div', class_='author clearfix')
+                    one['author'] = author_tag.select('a')[1].select('h2')[0].string;
+                    sex_age_tag = author_tag.select('div')[0]
+                    if 'manIcon' in sex_age_tag['class']:
+                        one['sex'] = u'男'
+                    elif 'womenIcon' in sex_age_tag['class']:
+                        one['sex'] = u'女'
+                    else:
+                        one['sex'] = u'不男不女'
+                    one['age'] = sex_age_tag.string
                     one['content'] = joke.find('div', class_='content').text.strip()
                     one['votes'] = joke.find('span', class_='stats-vote').i.string.strip()
                     try:
